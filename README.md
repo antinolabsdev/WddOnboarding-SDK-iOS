@@ -97,10 +97,10 @@ WddOnboard.sharedInstance.configAWS()
 ```
 WddOnboard.sharedInstance.showWddButton(on: self, position: .Right, color: .cyan, image: UIImage(named: ""))
 ```
-- here **self** is your current view controller
+- Here **self** is your current view controller
 - Position can be left or right
 - Here color and image is optional
-- Default color will be red
+- Default color will be blue
 - Default image is this flash icon
 
 **2)** Or you can also use your custom button. In that case just use this method in button’s click event:
@@ -118,7 +118,7 @@ WddOnboard.sharedInstance.hideWddButton()
 
 ## Contributing
 
-- If you **need help** or you'd like to **ask a general question**, contact us support@pinnacleworks.net
+- If you **need help** or you'd like to **ask a general question**
 - If you **found a bug**, open a service request.
 - If you **have a feature request**, open a service request.
 - If you **want to contribute**, submit a pull request.
