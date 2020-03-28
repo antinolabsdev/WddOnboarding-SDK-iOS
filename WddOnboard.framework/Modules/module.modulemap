@@ -1,0 +1,4 @@
+framework module WddOnboard {
+  header "WddOnboard-Swift.h"
+  requires objc
+}
