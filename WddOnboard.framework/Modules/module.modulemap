@@ -1,4 +1,11 @@
 framework module WddOnboard {
-  header "WddOnboard-Swift.h"
-  requires objc
+  umbrella header "WddOnboard.h"
+
+  export *
+  module * { export * }
+}
+
+module WddOnboard.Swift {
+    header "WddOnboard-Swift.h"
+    requires objc
 }

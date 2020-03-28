@@ -206,7 +206,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 
 
-typedef SWIFT_ENUM(NSInteger, ButtonPosition, closed) {
+typedef SWIFT_ENUM(NSInteger, ButtonPosition, open) {
   ButtonPositionLeft = 0,
   ButtonPositionRight = 1,
 };
