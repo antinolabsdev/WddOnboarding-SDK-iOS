@@ -1,16 +1,10 @@
 <h1>WddOnboarding iOS SDK</h1>
-<h2> Best-in-Class ChatBot for your mobile apps. Integrate painlessly the ChatBot for your customer support inside any iOS App with <a href="https://pinnacle.works/solutions/superbot/">SuperBot</a> SDK </h2>
+
 
   [![Language](https://img.shields.io/badge/Swift-5-red?style=plastic)]()
   [![Language](https://img.shields.io/badge/Objective--C-compatible-blue?style=plastic)]()
   [![License](https://img.shields.io/github/license/antinolabsdev/WddOnboarding-SDK-iOS?style=plastic)]()
   
-**SuperBot** is the most complete AI-driven Omni-channel conversation **ChatBot** developed with the help of technologies like Machine Learning and Artificial Intelligence powered by Google Algorithms for assisting organizations to attend their online queries.
-
-The Bot’s intelligence is backed by high data analytics and research. The AI technology used, makes it smarter every second, as it empowers the Bot with a Self-Learning Capability.
-
-The SuperBot iOS SDK is really simple to integrate into your apps, and allow your users to contact you via chat.
-
 ## Requirements
 
 - iOS 10.0+
