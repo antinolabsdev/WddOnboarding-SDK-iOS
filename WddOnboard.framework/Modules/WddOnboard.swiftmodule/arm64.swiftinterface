@@ -111,7 +111,7 @@ extension ImageScannerControllerError : Foundation.LocalizedError {
   public static var sharedInstance: WddOnboard.WddOnboard
   public var ButtonColor: UIKit.UIColor?
   @objc open func sayHello()
-  @objc open func configAWS()
+  @objc open func configWdd()
   @objc open func showWddButton(on viewController: UIKit.UIViewController, position: WddOnboard.ButtonPosition, color: UIKit.UIColor? = #colorLiteral(red: 0, green: 0.6823529412, blue: 0.9764705882, alpha: 1), image: UIKit.UIImage? = UIImage(named: "flash-btn", in: Bundle(for: WddOnboard.self), compatibleWith: nil))
   @objc open func hideWddButton()
   @objc open func openWDD(viewController: UIKit.UIViewController)

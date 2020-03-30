@@ -324,7 +324,7 @@ SWIFT_CLASS("_TtC10WddOnboard10WddOnboard")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 - (void)sayHello;
-- (void)configAWS;
+- (void)configWdd;
 - (void)showWddButtonOn:(UIViewController * _Nonnull)viewController position:(enum ButtonPosition)position color:(UIColor * _Nullable)color image:(UIImage * _Nullable)image;
 - (void)hideWddButton;
 - (void)openWDDWithViewController:(UIViewController * _Nonnull)viewController;
@@ -660,7 +660,7 @@ SWIFT_CLASS("_TtC10WddOnboard10WddOnboard")
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 - (void)sayHello;
-- (void)configAWS;
+- (void)configWdd;
 - (void)showWddButtonOn:(UIViewController * _Nonnull)viewController position:(enum ButtonPosition)position color:(UIColor * _Nullable)color image:(UIImage * _Nullable)image;
 - (void)hideWddButton;
 - (void)openWDDWithViewController:(UIViewController * _Nonnull)viewController;
