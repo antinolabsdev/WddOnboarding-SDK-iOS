@@ -1,0 +1,217 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)
+// swift-module-flags: -target armv7-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name WddOnboard
+import AVFoundation
+import AWSCore
+import AWSRekognition
+import CarbonKit
+import CoreMotion
+import Foundation
+import MBProgressHUD
+import Photos
+import Swift
+import UIKit
+import Vision
+@_exported import WddOnboard
+public protocol ImageScannerControllerDelegate : ObjectiveC.NSObjectProtocol {
+  func imageScannerController(_ scanner: WddOnboard.ImageScannerController, didFinishScanningWithResults results: WddOnboard.ImageScannerResults)
+  func imageScannerControllerDidCancel(_ scanner: WddOnboard.ImageScannerController)
+  func imageScannerController(_ scanner: WddOnboard.ImageScannerController, didFailWithError error: Swift.Error)
+}
+@objc final public class ImageScannerController : UIKit.UINavigationController {
+  weak final public var imageScannerDelegate: WddOnboard.ImageScannerControllerDelegate?
+  required public init(image: UIKit.UIImage? = nil, delegate: WddOnboard.ImageScannerControllerDelegate? = nil)
+  @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc override final public var supportedInterfaceOrientations: UIKit.UIInterfaceOrientationMask {
+    @objc get
+  }
+  @available(iOS 5.0, *)
+  @objc override dynamic public init(navigationBarClass: Swift.AnyClass?, toolbarClass: Swift.AnyClass?)
+  @objc override dynamic public init(rootViewController: UIKit.UIViewController)
+  @objc deinit
+}
+public struct ImageScannerScan {
+  public enum ImageScannerError : Swift.Error {
+    case failedToGeneratePDF
+    public static func == (a: WddOnboard.ImageScannerScan.ImageScannerError, b: WddOnboard.ImageScannerScan.ImageScannerError) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public var image: UIKit.UIImage
+  public func generatePDFData(completion: @escaping (Swift.Result<Foundation.Data, WddOnboard.ImageScannerScan.ImageScannerError>) -> Swift.Void)
+}
+public struct ImageScannerResults {
+  public var originalScan: WddOnboard.ImageScannerScan
+  public var croppedScan: WddOnboard.ImageScannerScan
+  public var enhancedScan: WddOnboard.ImageScannerScan?
+  public var doesUserPreferEnhancedScan: Swift.Bool
+  public var detectedRectangle: WddOnboard.Quadrilateral
+  @available(*, unavailable, renamed: "originalScan")
+  public var originalImage: UIKit.UIImage?
+  @available(*, unavailable, renamed: "croppedScan")
+  public var scannedImage: UIKit.UIImage?
+  @available(*, unavailable, renamed: "enhancedScan")
+  public var enhancedImage: UIKit.UIImage?
+  @available(*, unavailable, renamed: "doesUserPreferEnhancedScan")
+  public var doesUserPreferEnhancedImage: Swift.Bool
+}
+@objc public enum ButtonPosition : Swift.Int {
+  case Left
+  case Right
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum FaceCropResult<T> {
+  case success([T])
+  case notFound
+  case failure(Swift.Error)
+}
+public struct FaceCropper<T> {
+}
+public protocol FaceCroppable {
+}
+extension FaceCroppable {
+  public var face: WddOnboard.FaceCropper<Self> {
+    get
+  }
+}
+extension FaceCropper where T : CoreGraphics.CGImage {
+  public func crop(_ completion: @escaping (WddOnboard.FaceCropResult<CoreGraphics.CGImage>) -> Swift.Void)
+}
+extension FaceCropper where T : UIKit.UIImage {
+  public func crop(_ completion: @escaping (WddOnboard.FaceCropResult<UIKit.UIImage>) -> Swift.Void)
+}
+extension NSObject : WddOnboard.FaceCroppable {
+}
+extension CGImage : WddOnboard.FaceCroppable {
+}
+public enum ImageScannerControllerError : Swift.Error {
+  case authorization
+  case inputDevice
+  case capture
+  case ciImageCreation
+  public static func == (a: WddOnboard.ImageScannerControllerError, b: WddOnboard.ImageScannerControllerError) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+extension ImageScannerControllerError : Foundation.LocalizedError {
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+@objc open class WddOnboard : ObjectiveC.NSObject {
+  public static var sharedInstance: WddOnboard.WddOnboard
+  public var ButtonColor: UIKit.UIColor?
+  @objc open func sayHello()
+  @objc open func configAWS()
+  @objc open func showWddButton(on viewController: UIKit.UIViewController, position: WddOnboard.ButtonPosition, color: UIKit.UIColor? = #colorLiteral(red: 0, green: 0.6823529412, blue: 0.9764705882, alpha: 1), image: UIKit.UIImage? = UIImage(named: "flash-btn", in: Bundle(for: WddOnboard.self), compatibleWith: nil))
+  @objc open func hideWddButton()
+  @objc open func openWDD(viewController: UIKit.UIViewController)
+  @objc deinit
+}
+@objc open class FloatyViewController : UIKit.UIViewController {
+  final public let floaty: WddOnboard.Floaty
+  @objc override dynamic open func viewDidLoad()
+  @objc override dynamic open var preferredStatusBarStyle: UIKit.UIStatusBarStyle {
+    @objc get
+  }
+  @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
+  @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@objc @IBDesignable open class Floaty : UIKit.UIView {
+  @objc open var size: CoreGraphics.CGFloat {
+    @objc get
+    @objc set(newValue)
+  }
+  @objc open var paddingX: CoreGraphics.CGFloat {
+    @objc get
+    @objc set(newValue)
+  }
+  @objc open var paddingY: CoreGraphics.CGFloat {
+    @objc get
+    @objc set(newValue)
+  }
+  @IBInspectable @objc open var relativeToSafeArea: Swift.Bool
+  @objc @IBInspectable open var buttonColor: UIKit.UIColor
+  @objc @IBInspectable open var buttonHighlightedColor: UIKit.UIColor?
+  @objc @IBInspectable open var hasShadow: Swift.Bool
+  @objc @IBInspectable open var buttonShadowColor: UIKit.UIColor
+  @objc @IBInspectable open var buttonImage: UIKit.UIImage? {
+    @objc get
+    @objc set(newValue)
+  }
+  @objc @IBInspectable open var overlayColor: UIKit.UIColor
+  @objc @IBInspectable open var respondsToKeyboard: Swift.Bool
+  @objc open var friendlyTap: Swift.Bool
+  @objc open var sticky: Swift.Bool
+  @IBInspectable @objc open var supportLanscape: Swift.Bool
+  @objc open var global: WddOnboard.FloatyManager {
+    @objc get
+  }
+  @objc open var closed: Swift.Bool {
+    @objc get
+    @objc set(newValue)
+  }
+  @objc dynamic public init()
+  public init(size: CoreGraphics.CGFloat)
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc override dynamic open func draw(_ rect: CoreGraphics.CGRect)
+  @objc deinit
+  @objc override dynamic open func touchesBegan(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @objc override dynamic open func touchesEnded(_ touches: Swift.Set<UIKit.UITouch>, with event: UIKit.UIEvent?)
+  @objc override dynamic open func observeValue(forKeyPath keyPath: Swift.String?, of object: Any?, change: [Foundation.NSKeyValueChangeKey : Any]?, context: Swift.UnsafeMutableRawPointer?)
+  @objc override dynamic open func willMove(toSuperview newSuperview: UIKit.UIView?)
+  @objc override dynamic open func didMoveToSuperview()
+}
+extension Floaty {
+  @objc override dynamic open func layoutSubviews()
+  @objc override dynamic open var accessibilityLabel: Swift.String? {
+    @objc get
+    @objc set(newLabel)
+  }
+  @objc override dynamic open var accessibilityHint: Swift.String? {
+    @objc get
+    @objc set(newHint)
+  }
+  @objc override dynamic open var accessibilityValue: Swift.String? {
+    @objc get
+    @objc set(newHint)
+  }
+}
+public struct Quadrilateral {
+  public var topLeft: CoreGraphics.CGPoint
+  public var topRight: CoreGraphics.CGPoint
+  public var bottomRight: CoreGraphics.CGPoint
+  public var bottomLeft: CoreGraphics.CGPoint
+  public var description: Swift.String {
+    get
+  }
+}
+extension Quadrilateral : Swift.Equatable {
+  public static func == (lhs: WddOnboard.Quadrilateral, rhs: WddOnboard.Quadrilateral) -> Swift.Bool
+}
+@objc open class FloatyManager : ObjectiveC.NSObject {
+  open var button: WddOnboard.Floaty {
+    get
+  }
+  @objc override dynamic public init()
+  open var font: UIKit.UIFont {
+    get
+    set(newValue)
+  }
+  open var rtlMode: Swift.Bool {
+    get
+    set(newValue)
+  }
+  @objc deinit
+}
