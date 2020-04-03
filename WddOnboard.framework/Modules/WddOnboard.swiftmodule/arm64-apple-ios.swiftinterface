@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.1.3 (swiftlang-1100.0.282.1 clang-1100.0.33.15)
+// swift-compiler-version: Apple Swift version 5.2 (swiftlang-1103.0.32.1 clang-1103.0.32.29)
 // swift-module-flags: -target arm64-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name WddOnboard
 import AVFoundation
 import AWSCore
@@ -26,10 +26,10 @@ public protocol ImageScannerControllerDelegate : ObjectiveC.NSObjectProtocol {
   @objc override final public var supportedInterfaceOrientations: UIKit.UIInterfaceOrientationMask {
     @objc get
   }
+  @objc deinit
   @available(iOS 5.0, *)
   @objc override dynamic public init(navigationBarClass: Swift.AnyClass?, toolbarClass: Swift.AnyClass?)
   @objc override dynamic public init(rootViewController: UIKit.UIViewController)
-  @objc deinit
 }
 public struct ImageScannerScan {
   public enum ImageScannerError : Swift.Error {
@@ -57,6 +57,42 @@ public struct ImageScannerResults {
   public var enhancedImage: UIKit.UIImage?
   @available(*, unavailable, renamed: "doesUserPreferEnhancedScan")
   public var doesUserPreferEnhancedImage: Swift.Bool
+}
+@objc public class DefaultPreviewView : UIKit.UIView {
+  public var animationDuration: Foundation.TimeInterval
+  public enum Side {
+    case left
+    case right
+    case top
+    case bottom
+    public static func == (a: WddOnboard.DefaultPreviewView.Side, b: WddOnboard.DefaultPreviewView.Side) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+  }
+  public var side: WddOnboard.DefaultPreviewView.Side {
+    get
+    set(value)
+  }
+  public var scaleAmounts: [WddOnboard.PreviewState : CoreGraphics.CGFloat]
+  public var offsetAmount: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  public var offset: CoreGraphics.CGPoint
+  final public let colorView: UIKit.UIView
+  public var hapticsEnabled: Swift.Bool
+  required public init(side: WddOnboard.DefaultPreviewView.Side = .left)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc override dynamic public func layoutSubviews()
+  public func calculateOffset()
+  @objc deinit
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+}
+extension DefaultPreviewView : WddOnboard.ColorSliderPreviewing {
+  public func colorChanged(to color: UIKit.UIColor)
+  public func transition(to state: WddOnboard.PreviewState)
 }
 @objc public enum ButtonPosition : Swift.Int {
   case Left
@@ -107,38 +143,74 @@ extension ImageScannerControllerError : Foundation.LocalizedError {
     get
   }
 }
-@objc open class WddOnboard : ObjectiveC.NSObject {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc open class WddOnboard : ObjectiveC.NSObject {
   public static var sharedInstance: WddOnboard.WddOnboard
   public var ButtonColor: UIKit.UIColor?
   @objc open func sayHello()
   @objc open func configWdd()
   @objc open func showWddButton(on viewController: UIKit.UIViewController, position: WddOnboard.ButtonPosition, color: UIKit.UIColor? = #colorLiteral(red: 0, green: 0.6823529412, blue: 0.9764705882, alpha: 1), image: UIKit.UIImage? = UIImage(named: "flash-btn", in: Bundle(for: WddOnboard.self), compatibleWith: nil))
+  @objc open func showWddButton(on viewController: UIKit.UIViewController, image: UIKit.UIImage? = UIImage(named: "flash-btn", in: Bundle(for: WddOnboard.self), compatibleWith: nil))
   @objc open func hideWddButton()
   @objc open func openWDD(viewController: UIKit.UIViewController)
   @objc deinit
 }
-@objc open class FloatyViewController : UIKit.UIViewController {
+@objc @_inheritsConvenienceInitializers open class FloatyViewController : UIKit.UIViewController {
   final public let floaty: WddOnboard.Floaty
   @objc override dynamic open func viewDidLoad()
   @objc override dynamic open var preferredStatusBarStyle: UIKit.UIStatusBarStyle {
     @objc get
   }
+  @objc deinit
   @objc override dynamic public init(nibName nibNameOrNil: Swift.String?, bundle nibBundleOrNil: Foundation.Bundle?)
   @objc required dynamic public init?(coder: Foundation.NSCoder)
-  @objc deinit
 }
-@objc @IBDesignable open class Floaty : UIKit.UIView {
+public enum Orientation {
+  case horizontal
+  case vertical
+  public static func == (a: WddOnboard.Orientation, b: WddOnboard.Orientation) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+@objc public class ColorSlider : UIKit.UIControl {
+  public var color: UIKit.UIColor {
+    get
+    set(newValue)
+  }
+  final public let gradientView: WddOnboard.GradientView
+  final public let previewView: WddOnboard.PreviewView?
+  @available(*, unavailable)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  public convenience init(orientation: WddOnboard.Orientation = .vertical, previewSide side: WddOnboard.DefaultPreviewView.Side = .left)
+  required public init(orientation: WddOnboard.Orientation, previewView: WddOnboard.PreviewView?)
+  @objc deinit
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+}
+extension ColorSlider {
+  @objc override dynamic public func layoutSubviews()
+}
+extension ColorSlider {
+  @objc override dynamic public func beginTracking(_ touch: UIKit.UITouch, with event: UIKit.UIEvent?) -> Swift.Bool
+  @objc override dynamic public func continueTracking(_ touch: UIKit.UITouch, with event: UIKit.UIEvent?) -> Swift.Bool
+  @objc override dynamic public func endTracking(_ touch: UIKit.UITouch?, with event: UIKit.UIEvent?)
+  @objc override dynamic public func cancelTracking(with event: UIKit.UIEvent?)
+}
+extension ColorSlider {
+  @objc override dynamic public func hitTest(_ point: CoreGraphics.CGPoint, with event: UIKit.UIEvent?) -> UIKit.UIView?
+}
+@objc @_inheritsConvenienceInitializers @IBDesignable open class Floaty : UIKit.UIView {
   @objc open var size: CoreGraphics.CGFloat {
     @objc get
-    @objc set(newValue)
+    @objc set(value)
   }
   @objc open var paddingX: CoreGraphics.CGFloat {
     @objc get
-    @objc set(newValue)
+    @objc set(value)
   }
   @objc open var paddingY: CoreGraphics.CGFloat {
     @objc get
-    @objc set(newValue)
+    @objc set(value)
   }
   @IBInspectable @objc open var relativeToSafeArea: Swift.Bool
   @objc @IBInspectable open var buttonColor: UIKit.UIColor
@@ -147,7 +219,7 @@ extension ImageScannerControllerError : Foundation.LocalizedError {
   @objc @IBInspectable open var buttonShadowColor: UIKit.UIColor
   @objc @IBInspectable open var buttonImage: UIKit.UIImage? {
     @objc get
-    @objc set(newValue)
+    @objc set(value)
   }
   @objc @IBInspectable open var overlayColor: UIKit.UIColor
   @objc @IBInspectable open var respondsToKeyboard: Swift.Bool
@@ -159,7 +231,7 @@ extension ImageScannerControllerError : Foundation.LocalizedError {
   }
   @objc open var closed: Swift.Bool {
     @objc get
-    @objc set(newValue)
+    @objc set(value)
   }
   @objc dynamic public init()
   public init(size: CoreGraphics.CGFloat)
@@ -188,6 +260,21 @@ extension Floaty {
     @objc set(newHint)
   }
 }
+public typealias PreviewView = UIKit.UIView & WddOnboard.ColorSliderPreviewing
+public enum PreviewState {
+  case inactive
+  case activeFixed
+  case active
+  public static func == (a: WddOnboard.PreviewState, b: WddOnboard.PreviewState) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public protocol ColorSliderPreviewing {
+  func colorChanged(to color: UIKit.UIColor)
+  func transition(to state: WddOnboard.PreviewState)
+}
 public struct Quadrilateral {
   public var topLeft: CoreGraphics.CGPoint
   public var topRight: CoreGraphics.CGPoint
@@ -200,7 +287,36 @@ public struct Quadrilateral {
 extension Quadrilateral : Swift.Equatable {
   public static func == (lhs: WddOnboard.Quadrilateral, rhs: WddOnboard.Quadrilateral) -> Swift.Bool
 }
-@objc open class FloatyManager : ObjectiveC.NSObject {
+@objc final public class GradientView : UIKit.UIView {
+  final public var automaticallyAdjustsCornerRadius: Swift.Bool {
+    get
+    set(value)
+  }
+  final public var saturation: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  final public var whiteInset: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  final public var blackInset: CoreGraphics.CGFloat {
+    get
+    set(value)
+  }
+  required public init(orientation: WddOnboard.Orientation)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc deinit
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+}
+extension GradientView {
+  @objc override final public class var layerClass: Swift.AnyClass {
+    @objc get
+  }
+  @objc override final public func draw(_ rect: CoreGraphics.CGRect)
+  @objc override final public func layoutSubviews()
+}
+@objc @_inheritsConvenienceInitializers open class FloatyManager : ObjectiveC.NSObject {
   open var button: WddOnboard.Floaty {
     get
   }
